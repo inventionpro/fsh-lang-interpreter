@@ -3,14 +3,19 @@
   <head>
     <title>Fsh lang interpreter</title>
     <link rel="stylesheet" href="https://fsh.plus/media/style.css">
+    <style>
+      textarea {
+        resize: none;
+      }
+    </style>
   </head>
   <body>
     <div>
       <textarea id="code"></textarea>
       <button id="run">run</button>
     </div>
-    <textarea disabled id="logs"></textarea>
-    <textarea disabled id="output"></textarea>
+    <textarea disabled id="logs" cols="30" rows="25"></textarea>
+    <textarea disabled id="output" cols="30" rows="25"></textarea>
     <script src="interpreter.js"></script>
   </body>
 </html>
