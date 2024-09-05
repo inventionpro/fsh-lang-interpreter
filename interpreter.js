@@ -16,7 +16,7 @@ function readType(val) {
       type: 'null'
     };
   }
-  if (val.match(/^'[^']*'$/m)[0] || val.match(/^"[^"]*"$/m)[0] || val.match(/^`[^`]*`$/m)[0]) {
+  if ((val.match(/^'[^']*'$/m)||[false])[0] || (val.match(/^"[^"]*"$/m)||[false])[0] || (val.match(/^`[^`]*`$/m)||[false])[0]) {
     return {
       value: val.slice(1,-1),
       type: 'string'
