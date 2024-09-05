@@ -98,6 +98,7 @@ function interpret(code) {
           output('Error: Unknown data suplied, recived '+args[0]);
           continue;
         }
+        break;
       default:
         log('error> unknown keyword')
         break;
