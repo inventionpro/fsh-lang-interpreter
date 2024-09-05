@@ -15,7 +15,7 @@
   </head>
   <body>
     <div>
-      <textarea id="code"></textarea>
+      <textarea id="code" cols="50" rows="15"></textarea>
       <button id="run">run</button>
     </div>
     <div>
@@ -23,10 +23,10 @@
         <p>Logs</p>
         <textarea disabled id="logs" cols="30" rows="25"></textarea>
       </span>
-      <span>
-        <p>Output</p>
+      <details>
+        <legend>Output</legend>
         <textarea disabled id="output" cols="30" rows="25"></textarea>
-      </span>
+      </details>
     </div>
     <script src="interpreter.js"></script>
   </body>
