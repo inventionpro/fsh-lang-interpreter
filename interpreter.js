@@ -32,7 +32,7 @@ function interpret(code) {
       };
     }
     if (!val.includes(' ')) {
-      if (vars[val].type) {
+      if (vars[val]?.type) {
         return {
           value: vars[val].value,
           type: vars[val].type
