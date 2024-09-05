@@ -1,6 +1,6 @@
 let logs = document.getElementById('logs');
 function log(text) {
-  logs.innerHTML += text+'<br>'
+  logs.value += text+'\n'
 }
 
 function readType(val) {
@@ -14,6 +14,7 @@ function readType(val) {
 }
 
 function interpret(code) {
+  logs.value = '';
   log('start> preprocess');
   let preprocess = code
     .split('\n')
