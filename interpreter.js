@@ -1,3 +1,4 @@
+// Write info to user
 let logs = document.getElementById('logs');
 function log(text) {
   logs.value += text+'\n';
@@ -8,10 +9,17 @@ function output(text) {
   out.value += text+'\n';
 }
 
-function interpret(code) {
-  logs.value = '';
-  out.value = '';
+// Run the code
+function isFunction(val) {
+  return (val.match(/^[a-zA-Z0-9_]+\([^¬]*\)$/m)||[false])[0]
+}
+
+function interpret(code, world) {
+  log('world> '+world)
+  // Initialize some vars
   let vars = {};
+
+  // Useful functions
   function readType(val) {
     if (!isNaN(val)) {
       return {
@@ -39,22 +47,42 @@ function interpret(code) {
         }
       }
     }
+    if (isFunction(val)) {
+      if (vars[val.split('(')[0]]) {
+        let con = interpret(vars[val.split('(')[0]], 'function');
+        if (con.type === 'UNKNOWN') {
+          log('error> unknown type suplied, recived '+con.value);
+          output('Error: Unknown type suplied, recived '+con.value);
+          return con;
+        }
+        return con;
+      }
+    }
     return {
       value: val,
       type: 'UNKNOWN'
     }
   }
+
+  // Start with cleaning input
   log('start> preprocess');
+  if (code.includes('¬')) {
+    log('error> code must not include ¬')
+    output('Error: Code must not include ¬')
+    return;
+  }
   let preprocess = code
     .split('\n')
     .map(l => l.trim())
     .filter(l => l.length>0);
   log('end> preprocess');
+
+  // Start running code
   log('start> run');
   for (let i = 0; i < preprocess.length; i++) {
     log('start> line '+i);
     let args = preprocess[i].split(' ').map(t=>t.trim()).filter(t=>t.length>0);
-    switch (preprocess[i].match(/^[a-zA-Z0-9]+/m)[0]) {
+    switch (preprocess[i].match(/^[a-zA-Z0-9_]+/m)[0]) {
       case 'let':
       case 'const':
         if(args[2] !== '=') {
@@ -99,6 +127,20 @@ function interpret(code) {
           continue;
         }
         break;
+      case 'return':
+        if (world !== 'function') {
+          log('error> cannot use return outside functions');
+          output('Error: Cannot use return outside functions');
+          continue;
+        }
+        let con = readType(args.slice(1, args.length).join(' '));
+        if (con.type === 'UNKNOWN') {
+          log('error> unknown type suplied, recived '+con.value);
+          output('Error: Unknown type suplied, recived '+con.value);
+          return { value: con.value, type: con.type };
+        }
+        return { value: con.value, type: con.type };
+        break;
       default:
         log('error> unknown keyword')
         break;
@@ -106,8 +148,17 @@ function interpret(code) {
     log('end> line '+i);
   }
   log('end> run');
+  if (world === 'function') {
+    return {
+      value: null,
+      type: 'null'
+    };
+  }
 }
 
+// Event listener
 document.getElementById('run').onclick = function(){
-  interpret(document.getElementById('code').value)
+  logs.value = '';
+  out.value = '';
+  interpret(document.getElementById('code').value, 'main')
 }
