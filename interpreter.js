@@ -51,7 +51,12 @@ function interpret(code, world, vars = {}) {
         let passed = val.slice(val.indexOf('('),-1).split(',');
         let arg = vars[val.split('(')[0]].args;
         for (let i = 0; i<arg.length; i++) {
-          newvars[arg[i]] = passed[1] || { value:null, type:'null' };
+          if (passed[i]) {
+            let co = readType(passed[i]);
+            newvars[arg[i]] = co;
+          } else {
+            newvars[arg[i]] = { value: null, type: 'null' };
+          }
         }
         let con = interpret(vars[val.split('(')[0]].value, 'function', newvars);
         if (con.type === 'UNKNOWN') {
