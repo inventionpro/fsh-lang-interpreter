@@ -48,7 +48,7 @@ function interpret(code, world) {
       }
     }
     if (isFunction(val)) {
-      if (vars[val.split('(')[0]]) {
+      if (vars[val.split('(')[0]]?.type === 'function') {
         let con = interpret(vars[val.split('(')[0]].value, 'function');
         if (con.type === 'UNKNOWN') {
           log('error> unknown type suplied, recived '+con.value);
@@ -86,7 +86,7 @@ function interpret(code, world) {
     switch (preprocess[i].match(/^[a-zA-Z0-9_]+/m)[0]) {
       case 'let':
       case 'const':
-        if(args[2] !== '=') {
+        if (args[2] !== '=') {
           if (!args[3]) {
             if (args[0] === 'const') {
               log('error> tried initializing a constant with no value');
