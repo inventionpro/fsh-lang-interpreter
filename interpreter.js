@@ -48,7 +48,7 @@ function interpret(code, world, vars = {}) {
     if (isFunction(val)) {
       if (vars[val.split('(')[0]]?.type === 'function') {
         let newvars = {};
-        let passed = val.slice(val.indexOf('('),-1).split(',');
+        let passed = val.slice(val.indexOf('(')+1,-1).split(',');
         let arg = vars[val.split('(')[0]].args;
         for (let i = 0; i<arg.length; i++) {
           if (passed[i]) {
