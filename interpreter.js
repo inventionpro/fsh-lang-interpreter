@@ -131,6 +131,25 @@ function interpret(code, world, vars = {}) {
         }
         vars[args[1]] = { value: con.value, type: con.type, mut: args[0] };
         break;
+      case 'function':
+        if (isFunction(args[1])) {
+          con = '';
+          i++;
+          while (preprocess[i] !== '}' && i < preprocess.length) {
+            con += preprocess[i];
+            i++;
+          }
+          vars[args[1].split('(')[0]] = {
+            value: con,
+            type: 'function',
+            args: args[1].split('(')[1].slice(0,-1).split(',').map(a=>a.trim())
+          }
+        } else {
+          log('error> function first argument must be name(args)');
+          output('Error: Function first argument must be name(args)');
+          continue;
+        }
+        break;
       case 'return':
         if (world !== 'function') {
           log('error> cannot use return outside functions');
