@@ -56,6 +56,13 @@ function interpret(code, world) {
           return con;
         }
         return con;
+      } else {
+        log('error> '+val.split('(')[0]+' is not a function');
+        output('Error: '+val.split('(')[0]+' is not a function');
+        return {
+          value: val,
+          type: 'UNKNOWN'
+        }
       }
     }
     return {
