@@ -82,6 +82,7 @@ function interpret(code, world) {
   for (let i = 0; i < preprocess.length; i++) {
     log('start> line '+i);
     let args = preprocess[i].split(' ').map(t=>t.trim()).filter(t=>t.length>0);
+    let con;
     switch (preprocess[i].match(/^[a-zA-Z0-9_]+/m)[0]) {
       case 'let':
       case 'const':
@@ -99,7 +100,7 @@ function interpret(code, world) {
           output('Error: Expected = recived '+args[2]);
           continue;
         }
-        let con = readType(args.slice(3, args.length).join(' '));
+        con = readType(args.slice(3, args.length).join(' '));
         if (con.type === 'UNKNOWN') {
           log('error> unknown type suplied, recived '+con.value);
           output('Error: Unknown type suplied, recived '+con.value);
@@ -114,7 +115,7 @@ function interpret(code, world) {
           continue;
         }
         if ((args[0].match(/^print\([^¬]*\)$/m)||[false])[0]) {
-          let con = readType(args[0].slice(6,-1));
+          con = readType(args[0].slice(6,-1));
           if (con.type === 'UNKNOWN') {
             log('error> unknown type suplied, recived '+con.value);
             output('Error: Unknown type suplied, recived '+con.value);
@@ -133,7 +134,7 @@ function interpret(code, world) {
           output('Error: Cannot use return outside functions');
           continue;
         }
-        let con = readType(args.slice(1, args.length).join(' '));
+        con = readType(args.slice(1, args.length).join(' '));
         if (con.type === 'UNKNOWN') {
           log('error> unknown type suplied, recived '+con.value);
           output('Error: Unknown type suplied, recived '+con.value);
