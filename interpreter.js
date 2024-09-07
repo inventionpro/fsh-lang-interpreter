@@ -49,7 +49,7 @@ function interpret(code, world) {
     }
     if (isFunction(val)) {
       if (vars[val.split('(')[0]]) {
-        let con = interpret(vars[val.split('(')[0]], 'function');
+        let con = interpret(vars[val.split('(')[0]].value, 'function');
         if (con.type === 'UNKNOWN') {
           log('error> unknown type suplied, recived '+con.value);
           output('Error: Unknown type suplied, recived '+con.value);
