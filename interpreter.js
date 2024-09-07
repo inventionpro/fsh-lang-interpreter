@@ -14,10 +14,8 @@ function isFunction(val) {
   return (val.match(/^[a-zA-Z0-9_]+\([^¬]*\)$/m)||[false])[0]
 }
 
-function interpret(code, world) {
+function interpret(code, world, vars = {}) {
   log('world> '+world)
-  // Initialize some vars
-  let vars = {};
 
   // Useful functions
   function readType(val) {
@@ -49,7 +47,13 @@ function interpret(code, world) {
     }
     if (isFunction(val)) {
       if (vars[val.split('(')[0]]?.type === 'function') {
-        let con = interpret(vars[val.split('(')[0]].value, 'function');
+        let newvars = {};
+        let passed = val.slice(val.indexOf('('),-1).split(',');
+        let arg = vars[val.split('(')[0]].args;
+        for (let i = 0; i<arg.length; i++) {
+          newvars[arg[i]] = passed[1] || { value:null, type:'null' };
+        }
+        let con = interpret(vars[val.split('(')[0]].value, 'function', newvars);
         if (con.type === 'UNKNOWN') {
           log('error> unknown type suplied, recived '+con.value);
           output('Error: Unknown type suplied, recived '+con.value);
