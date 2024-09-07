@@ -16,6 +16,13 @@ function isFunction(val) {
 
 function interpret(code, world, vars = {}) {
   log('world> '+world)
+  // Internal functions
+  if (world === 'internal_function') {
+    return eval(code);
+  }
+
+  // Default vars
+  if (!vars['print']) vars['print'] = { value: 'output(vars["text"]);return{value:null,type:"null"}', type: 'internal_function', args: ['text'] }
 
   // Useful functions
   function readType(val) {
@@ -46,7 +53,7 @@ function interpret(code, world, vars = {}) {
       }
     }
     if (isFunction(val)) {
-      if (vars[val.split('(')[0]]?.type === 'function') {
+      if (['function', 'internal_function'].includes(vars[val.split('(')[0]]?.type)) {
         let newvars = {};
         let passed = val.slice(val.indexOf('(')+1,-1).split(',');
         let arg = vars[val.split('(')[0]].args;
@@ -58,7 +65,7 @@ function interpret(code, world, vars = {}) {
             newvars[arg[i]] = { value: null, type: 'null' };
           }
         }
-        let con = interpret(vars[val.split('(')[0]].value, 'function', newvars);
+        let con = interpret(vars[val.split('(')[0]].value, vars[val.split('(')[0]].type, newvars);
         if (con.type === 'UNKNOWN') {
           log('error> unknown type suplied, recived '+con.value);
           output('Error: Unknown type suplied, recived '+con.value);
@@ -124,26 +131,6 @@ function interpret(code, world, vars = {}) {
         }
         vars[args[1]] = { value: con.value, type: con.type, mut: args[0] };
         break;
-      case 'print':
-        if(args[1]) {
-          log('error> unknown exta data passed after print');
-          output('Error: Unknown exta data passed after print');
-          continue;
-        }
-        if ((args[0].match(/^print\([^¬]*\)$/m)||[false])[0]) {
-          con = readType(args[0].slice(6,-1));
-          if (con.type === 'UNKNOWN') {
-            log('error> unknown type suplied, recived '+con.value);
-            output('Error: Unknown type suplied, recived '+con.value);
-            continue;
-          }
-          output(con.value);
-        } else {
-          log('error> unknown data suplied, recived '+args[0]);
-          output('Error: Unknown data suplied, recived '+args[0]);
-          continue;
-        }
-        break;
       case 'return':
         if (world !== 'function') {
           log('error> cannot use return outside functions');
@@ -159,7 +146,7 @@ function interpret(code, world, vars = {}) {
         return { value: con.value, type: con.type };
         break;
       default:
-        log('error> unknown keyword')
+        readType(preprocess[i]);
         break;
     }
     log('end> line '+i);
