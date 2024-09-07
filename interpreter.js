@@ -22,7 +22,7 @@ function interpret(code, world, vars = {}) {
   }
 
   // Default vars
-  if (!vars['print']) vars['print'] = { value: 'output(vars["text"]);{value:null,type:"null"}', type: 'internal_function', args: ['text'] }
+  if (!vars['print']) vars['print'] = { value: '(()=>{output(vars["text"]);return {value:null,type:"null"}})()', type: 'internal_function', args: ['text'] }
 
   // Useful functions
   function readType(val) {
