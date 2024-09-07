@@ -11,7 +11,7 @@ function output(text) {
 
 // Run the code
 function isFunction(val) {
-  return (val.match(/^[a-zA-Z0-9_]+\([^¬]*\)$/m)||[false])[0]
+  return (val.match(/^[a-zA-Z0-9_]+\([^¬]*\)$/m)??[false])[0]
 }
 
 function interpret(code, world, vars = {}) {
@@ -38,7 +38,7 @@ function interpret(code, world, vars = {}) {
         type: 'null'
       };
     }
-    if ((val.match(/^'[^']*'$/m)||[false])[0] || (val.match(/^"[^"]*"$/m)||[false])[0] || (val.match(/^`[^`]*`$/m)||[false])[0]) {
+    if ((val.match(/^'[^']*'$/m)??[false])[0] || (val.match(/^"[^"]*"$/m)??[false])[0] || (val.match(/^`[^`]*`$/m)??[false])[0]) {
       return {
         value: val.slice(1,-1),
         type: 'string'
@@ -106,7 +106,7 @@ function interpret(code, world, vars = {}) {
     log('start> line '+i);
     let args = preprocess[i].split(' ').map(t=>t.trim()).filter(t=>t.length>0);
     let con;
-    switch (preprocess[i].match(/^[a-zA-Z0-9_]+/m)[0]) {
+    switch ((preprocess[i].match(/^[a-zA-Z0-9_]+/m)??[null])[0]) {
       case 'let':
       case 'const':
         if (args[2] !== '=') {
