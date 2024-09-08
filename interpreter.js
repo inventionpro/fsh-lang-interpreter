@@ -95,6 +95,7 @@ function interpret(code, world, vars = {}) {
     return;
   }
   let preprocess = code
+    .replaceAll(/.=./g, function(match){return match.replace('=',' = ').replaceAll('  ',' ')})
     .split('\n')
     .map(l => l.trim())
     .filter(l => l.length>0);
