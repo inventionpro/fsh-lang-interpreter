@@ -165,7 +165,29 @@ function interpret(code, world, vars = {}) {
         return { value: con.value, type: con.type };
         break;
       default:
-        readType(preprocess[i]);
+        if (args[1]==='=') {
+          if (vars[args[0]]?.type) {
+            if (vars[args[0]]?.mut === 'const') {
+              log('error> cannot re-asign value of const');
+              output('Error: Cannot re-assign value of const');
+              continue;
+            }
+            con = readType(args.slice(2,args.length).join(' '));
+            if (con.type === 'UNKNOWN') {
+              log('error> unknown type suplied, recived '+con.value);
+              output('Error: Unknown type suplied, recived '+con.value);
+              continue;
+            }
+            con.mut = 'let';
+            vars[args[0]] = con;
+          } else {
+            log('error> cannot set uninitialized variable');
+            output('Error: Cannot set uninitialized variable');
+            continue;
+          }
+        } else {
+          readType(preprocess[i]);
+        }
         break;
     }
     log('end> line '+i);
