@@ -26,6 +26,12 @@ function interpret(code, world, vars = {}) {
 
   // Useful functions
   function readType(val) {
+    if (['true','false'].includes(val)) {
+      return {
+        value: (val==='true'? true: false),
+        type: 'boolean'
+      };
+    }
     if (!isNaN(val)) {
       return {
         value: Number(val),
