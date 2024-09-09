@@ -1,5 +1,5 @@
 // Imports
-import evaluate from '/math.js'
+import evaluate from './math.js'
 
 // Write info to user
 let logs = document.getElementById('logs');
