@@ -1,3 +1,6 @@
+// Imports
+import evaluate from '/math.js'
+
 // Write info to user
 let logs = document.getElementById('logs');
 function log(text) {
@@ -22,7 +25,7 @@ function interpret(code, world, vars = {}) {
   }
 
   // Default vars
-  if (!vars['print']) vars['print'] = { value: '(()=>{output(vars["text"].value);return {value:null,type:"null"}})()', type: 'internal_function', args: ['text'] }
+  vars['print'] ??= { value: '(()=>{output(vars["text"].value);return {value:null,type:"null"}})()', type: 'internal_function', args: ['text'] };
 
   // Useful functions
   function readType(val) {
@@ -85,6 +88,12 @@ function interpret(code, world, vars = {}) {
           value: val,
           type: 'UNKNOWN'
         }
+      }
+    }
+    if (/[+\-*/%]/.test(val)) {
+      return {
+        value: evaluate(val),
+        type: 'number'
       }
     }
     return {
