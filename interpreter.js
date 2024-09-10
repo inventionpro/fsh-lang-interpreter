@@ -95,8 +95,10 @@ function interpret(code, world, vars = {}) {
       }
     }
     if (/[+\-*/%^]/.test(val)) {
+      let nval = val;
+      nval.replaceAll(/[a-zA-Z_][a-zA-Z0-9_]*/, function(match){return vars[match]?.value ?? 0})
       return {
-        value: evaluate(val),
+        value: evaluate(nval),
         type: 'number'
       }
     }
@@ -129,6 +131,16 @@ function interpret(code, world, vars = {}) {
     switch ((preprocess[i].match(/^[a-zA-Z0-9_]+/m)??[null])[0]) {
       case 'let':
       case 'const':
+        if (!args[1]) {
+          log('error> must include variable name');
+          output('Error: Must include variable name');
+          continue;
+        }
+        if (!args[1].test(/^[0-9]/m)) {
+          log('error> variable name cannot start with number');
+          output('Error: Variable name cannot start with number');
+          continue;
+        }
         if (args[2] !== '=') {
           if (!args[3]) {
             if (args[0] === 'const') {
