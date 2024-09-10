@@ -53,14 +53,6 @@ function interpret(code, world, vars = {}) {
         type: 'string'
       };
     }
-    if (!val.includes(' ')) {
-      if (vars[val]?.type) {
-        return {
-          value: vars[val].value,
-          type: vars[val].type
-        }
-      }
-    }
     if (isFunction(val)) {
       if (['function', 'internal_function'].includes(vars[val.split('(')[0]]?.type)) {
         let newvars = {};
@@ -90,7 +82,19 @@ function interpret(code, world, vars = {}) {
         }
       }
     }
-    if (/[+\-*/%]/.test(val)) {
+    if (vars[val]?.type) {
+      if (vars[val].type === 'internal_function') {
+        return {
+          value: '[Internal Function]',
+          type: 'string'
+        }
+      }
+      return {
+        value: vars[val].value,
+        type: vars[val].type
+      }
+    }
+    if (/[+\-*/%^]/.test(val)) {
       return {
         value: evaluate(val),
         type: 'number'
