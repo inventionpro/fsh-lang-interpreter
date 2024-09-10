@@ -96,7 +96,7 @@ function interpret(code, world, vars = {}) {
     }
     if (/[+\-*/%^]/.test(val)) {
       let nval = val;
-      nval.replaceAll(/[a-zA-Z_][a-zA-Z0-9_]*/, function(match){return vars[match]?.value ?? 0})
+      nval.replaceAll(/[a-zA-Z_][a-zA-Z0-9_]*/g, function(match){return vars[match]?.value ?? 0})
       return {
         value: evaluate(nval),
         type: 'number'
