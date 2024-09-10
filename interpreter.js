@@ -136,7 +136,7 @@ function interpret(code, world, vars = {}) {
           output('Error: Must include variable name');
           continue;
         }
-        if (!/^[0-9]/m.test(args[1])) {
+        if (/^[0-9]/m.test(args[1])) {
           log('error> variable name cannot start with number');
           output('Error: Variable name cannot start with number');
           continue;
