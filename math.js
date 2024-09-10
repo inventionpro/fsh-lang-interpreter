@@ -1,4 +1,4 @@
-export function evaluate(expression) {
+export default function evaluate(expression) {
   // Step 1: Tokenize the expression
   function tokenize(exp) {
     const tokens = [];
