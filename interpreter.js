@@ -136,7 +136,7 @@ function interpret(code, world, vars = {}) {
           output('Error: Must include variable name');
           continue;
         }
-        if (/^[a-zA-Z_][a-zA-Z0-9_]*$/m.test(args[1])) {
+        if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/m.test(args[1])) {
           log('error> invalid variable name, cannot start with number or invalid character');
           output('Error: Invalid variable name, cannot start with number or invalid character');
           continue;
