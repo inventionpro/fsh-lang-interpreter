@@ -86,7 +86,10 @@ export default function evaluate(expression) {
         }
       }
     }
-    
+
+    if (isNaN(stack[0])) {
+      return 0;
+    }
     return stack[0];
   }
 
