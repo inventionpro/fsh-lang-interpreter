@@ -56,32 +56,32 @@ function interpret(code, world, vars = {}) {
       };
     }
     if (isFunction(val)) {
-      if (['function', 'internal_function'].includes(vars[val.split('(')[0]]?.type)) {
-        let newvars = vars;
-        let passed = val.slice(val.indexOf('(')+1,-1).split(',');
-        let arg = vars[val.split('(')[0]].args;
-        for (let i = 0; i<arg.length; i++) {
+      let functionName = val.split('(')[0];
+      if (['function', 'internal_function'].includes(vars[functionName]?.type)) {
+        let newvars = structuredClone(vars);
+        let passed = val.slice(val.indexOf('(')+1,-1).split(',').map(arg => arg.trim());
+        let args = vars[functionName].args;
+
+        for (let i = 0; i < args.length; i++) {
           if (passed[i]) {
-            let co = readType(passed[i]);
-            newvars[arg[i]] = co;
+            let parsedValue = readType(passed[i]);
+            newvars[args[i]] = parsedValue;
           } else {
-            newvars[arg[i]] = { value: null, type: 'null' };
+            newvars[args[i]] = { value: null, type: 'null' };
           }
         }
-        let con = interpret(vars[val.split('(')[0]].value, vars[val.split('(')[0]].type, newvars);
-        if (con.type === 'UNKNOWN') {
-          log('error> unknown type suplied, recived '+con.value);
-          output('Error: Unknown type suplied, recived '+con.value);
-          return con;
+
+        let result = interpret(vars[functionName].value, vars[functionName].type, newvars);
+        if (result.type === 'UNKNOWN') {
+          log('error> unknown type supplied, received ' + result.value);
+          output('Error: Unknown type supplied, received ' + result.value);
+          return result;
         }
-        return con;
+        return result;
       } else {
-        log('error> '+val.split('(')[0]+' is not a function');
-        output('Error: '+val.split('(')[0]+' is not a function');
-        return {
-          value: val,
-          type: 'UNKNOWN'
-        }
+        log('error> ' + functionName + ' is not a function');
+        output('Error: ' + functionName + ' is not a function');
+        return { value: val, type: 'UNKNOWN' };
       }
     }
     if (vars[val]?.type) {
