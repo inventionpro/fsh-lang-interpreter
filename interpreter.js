@@ -5,13 +5,13 @@ import evaluate from './math.js'
 let logs = document.getElementById('logs');
 function log(text) {
   text = String(text);
-  logs.innerHTML += '<p>'+text.replaceAll('\n','<br>')+'</p>';
+  logs.innerHTML += '<p><label style="color:var(--text-2)">'+text.replace('> ','</label> ').replaceAll('\n','<br>')+'</p>';
 }
 
 let out = document.getElementById('output');
 function output(text) {
   text = String(text);
-  out.innerHTML += '<p>'+text.replaceAll('\n','<br>')+'</p>';
+  out.innerHTML += '<p>'+text.replace('Error: ','<label style="color:#c66">Error:</label> ').replaceAll('\n','<br>')+'</p>';
 }
 
 // Run the code
