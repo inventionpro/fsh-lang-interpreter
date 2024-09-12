@@ -7,12 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fsh.plus/media/style.css">
     <style>
-      div {
+      body > div {
         display: flex;
         align-items: center;
       }
       textarea {
         resize: none;
+      }
+      div div {
+        width: 20vw;
+        height: 50vh;
+        padding: 5px;
+        color: var(--text-1);
+        border-radius: 0.75rem;
+        border: 2px var(--text-1) solid;
       }
     </style>
   </head>
@@ -24,11 +32,11 @@
     <div>
       <span>
         <p>Output</p>
-        <textarea disabled id="output" cols="30" rows="25"></textarea>
+        <div id="output"></div>
       </span>
       <details>
         <summary>Logs</summary>
-        <textarea disabled id="logs" cols="30" rows="25"></textarea>
+        <div id="logs"></div>
       </details>
     </div>
     <script src="interpreter.js" type="module"></script>
