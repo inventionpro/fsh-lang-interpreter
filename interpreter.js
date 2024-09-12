@@ -237,7 +237,7 @@ function interpret(code, world, vars = {}) {
 
 // Event listener
 document.getElementById('run').onclick = function(){
-  logs.value = '';
-  out.value = '';
+  logs.innerHTML = '';
+  out.innerHTML = '';
   interpret(document.getElementById('code').value, 'main')
 }
