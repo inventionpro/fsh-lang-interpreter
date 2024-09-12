@@ -4,11 +4,13 @@ import evaluate from './math.js'
 // Write info to user
 let logs = document.getElementById('logs');
 function log(text) {
+  text = String(text);
   logs.innerHTML += '<p>'+text.replaceAll('\n','<br>')+'</p>';
 }
 
 let out = document.getElementById('output');
 function output(text) {
+  text = String(text);
   out.innerHTML += '<p>'+text.replaceAll('\n','<br>')+'</p>';
 }
 
