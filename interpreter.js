@@ -5,7 +5,7 @@ import evaluate from './math.js'
 let logs = document.getElementById('logs');
 function log(text) {
   text = String(text);
-  logs.innerHTML += '<p><label style="color:var(--text-2)">'+text.replace('> ','</label> ').replaceAll('\n','<br>')+'</p>';
+  logs.innerHTML += '<p><label style="color:'+(text.startsWith('error> ') ? '#c66' : 'var(--text-2)')+'">'+text.replace('> ','></label> ').replaceAll('\n','<br>')+'</p>';
 }
 
 let out = document.getElementById('output');
