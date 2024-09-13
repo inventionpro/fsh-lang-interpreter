@@ -152,6 +152,7 @@ function interpret(code, world, vars = {}) {
     log('start> line '+i);
     let args = preprocess[i].split(' ').map(t=>t.trim()).filter(t=>t.length>0);
     let con;
+    let depth = 0;
     switch ((preprocess[i].match(/^[a-zA-Z0-9_]+/m)??[null])[0]) {
       case 'let':
       case 'const':
@@ -191,7 +192,9 @@ function interpret(code, world, vars = {}) {
         if (isFunction(args[1])) {
           con = '';
           i++;
-          while (preprocess[i] !== '}' && i < preprocess.length) {
+          while (preprocess[i] !== '}' && depth===0 && i < preprocess.length) {
+            if (preprocess[i].includes('{')) depth++;
+            if (preprocess[i] === '}') depth--;
             con += preprocess[i];
             i++;
           }
