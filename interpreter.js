@@ -195,7 +195,7 @@ function interpret(code, world, vars = {}) {
           while ((preprocess[i] !== '}' || depth!==0) && i < preprocess.length) {
             if (preprocess[i].includes('{')) depth++;
             if (preprocess[i] === '}') depth--;
-            con += preprocess[i];
+            con += '\n'+preprocess[i];
             i++;
           }
           vars[args[1].split('(')[0]] = {
