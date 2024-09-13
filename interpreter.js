@@ -192,7 +192,7 @@ function interpret(code, world, vars = {}) {
         if (isFunction(args[1])) {
           con = '';
           i++;
-          while (preprocess[i] !== '}' && depth===0 && i < preprocess.length) {
+          while ((preprocess[i] !== '}' || depth!==0) && i < preprocess.length) {
             if (preprocess[i].includes('{')) depth++;
             if (preprocess[i] === '}') depth--;
             con += preprocess[i];
