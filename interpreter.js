@@ -81,7 +81,7 @@ function interpret(code, world, vars = {}) {
       let functionName = val.split('(')[0];
       if (['function', 'internal_function'].includes(vars[functionName]?.type)) {
         let newvars = structuredClone(vars);
-        let passed = splitTopLevel(val).map(arg => arg.trim());
+        let passed = splitTopLevel(val.slice(functionName.length+1,-1)).map(arg => arg.trim());
         let args = vars[functionName].args;
 
         for (let i = 0; i < args.length; i++) {
