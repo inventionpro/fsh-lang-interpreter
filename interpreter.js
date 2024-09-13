@@ -18,9 +18,31 @@ function output(text) {
 function isFunction(val) {
   return (val.match(/^[a-zA-Z0-9_]+\([^¬]*\)$/m)??[false])[0]
 }
+function splitTopLevel(str) {
+  let result = [];
+  let current = '';
+  let depth = 0;
+
+  for (let char of str) {
+    if (char === '(') {
+      depth++;
+    } else if (char === ')') {
+      depth--;
+    }
+    if (char === ',' && depth === 0) {
+      result.push(current.trim());
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  result.push(current.trim());
+  return result;
+}
 
 function interpret(code, world, vars = {}) {
   log('world> '+world)
+  Scheduler.yield ? Scheduler.yield() : '';
   // Internal functions
   if (world === 'internal_function') {
     return eval(code);
@@ -59,7 +81,7 @@ function interpret(code, world, vars = {}) {
       let functionName = val.split('(')[0];
       if (['function', 'internal_function'].includes(vars[functionName]?.type)) {
         let newvars = structuredClone(vars);
-        let passed = val.slice(val.indexOf('(')+1,-1).split(',').map(arg => arg.trim());
+        let passed = splitTopLevel(val).map(arg => arg.trim());
         let args = vars[functionName].args;
 
         for (let i = 0; i < args.length; i++) {
