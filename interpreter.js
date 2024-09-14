@@ -190,7 +190,7 @@ function interpret(code, world, vars = {}) {
         vars[args[1]] = { value: con.value, type: con.type, mut: args[0] };
         break;
       case 'function':
-        if (isFunction(args[1])) {
+        if (isFunction(args.slice(1,-1).join(' '))) {
           con = '';
           i++;
           while ((preprocess[i] !== '}' || depth!==0) && i < preprocess.length) {
@@ -223,6 +223,38 @@ function interpret(code, world, vars = {}) {
           return { value: con.value, type: con.type };
         }
         return { value: con.value, type: con.type };
+        break;
+      case 'if':
+        con = args[1].slice(1,-1).join(' ');
+        if (con[0] === '(' && con[con.length - 1] === ')') {
+          con = readType(con.slice(1,-1));
+          if (con.type !== 'boolean') {
+            log('error> argument passed to if did not become boolean');
+            output('Error: Argument passed to if did not become boolean');
+            continue;
+          }
+          if (con.value) {
+            con = '';
+            i++
+            while ((preprocess[i] !== '}' || depth!==0) && i < preprocess.length) {
+              if (preprocess[i].includes('{')) depth++;
+              if (preprocess[i] === '}') depth--;
+              con += '\n'+preprocess[i];
+              i++;
+            }
+            interpret(con, 'if', structuredClone(vars));
+          } else {
+            while ((preprocess[i] !== '}' || depth!==0) && i < preprocess.length) {
+              if (preprocess[i].includes('{')) depth++;
+              if (preprocess[i] === '}') depth--;
+              i++;
+            }
+          }
+        } else {
+          log('error> second argument in if must be (operation)');
+          output('Error: Second argument in if must be (operation)');
+          continue;
+        }
         break;
       default:
         if (args[1]==='=') {
