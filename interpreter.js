@@ -255,7 +255,7 @@ function interpret(code, world, vars = {}) {
                 output('Error: Cannot use return outside functions');
                 continue;
               }
-              con = readType((con.match(/^return .*$/m)??['null'])[0]);
+              con = readType((con.match(/^return .*$/m)??['null'])[0].replace('return ',''));
               if (con.type === 'UNKNOWN') {
                 log('error> unknown type suplied, recived '+con.value);
                 output('Error: Unknown type suplied, recived '+con.value);
