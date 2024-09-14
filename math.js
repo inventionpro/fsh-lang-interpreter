@@ -1,28 +1,45 @@
-export default function evaluate(expression) {
+export default function evaluate(expression) { 
   // Step 1: Tokenize the expression
   function tokenize(exp) {
     const tokens = [];
-    let numberBuffer = '';
+    let buffer = '';
     
     for (let char of exp) {
-      // If the character is a digit, build a number
+      // If the character is part of a number, build a number or part of a string
       if (/\d/.test(char)) {
-        numberBuffer += char;
-      } else {
-        if (numberBuffer.length > 0) {
-          // Push the built number as token
-          tokens.push(Number(numberBuffer));
-          numberBuffer = '';
+        buffer += char;
+      } else if (/["'`]/.test(char)) {
+        // Handle strings by detecting quotes
+        if (buffer.length > 0) {
+          tokens.push(buffer);
+          buffer = '';
         }
-        if (/[+\-*/%^()]/.test(char)) {
-          // Push operators and parentheses as tokens
+        let stringToken = '';
+        let closingQuote = false;
+        while (!closingQuote) {
+          char = exp[++i];
+          if (/["'`]/.test(char)) {
+            closingQuote = true;
+          } else {
+            stringToken += char;
+          }
+        }
+        tokens.push(stringToken);
+      } else {
+        if (buffer.length > 0) {
+          tokens.push(Number(buffer));
+          buffer = '';
+        }
+        if (/[+\-*/%^<>=()]/.test(char)) {
           tokens.push(char);
         }
       }
     }
-    if (numberBuffer.length > 0) {
-      tokens.push(Number(numberBuffer));
+
+    if (buffer.length > 0) {
+      tokens.push(Number(buffer));
     }
+
     return tokens;
   }
 
@@ -31,16 +48,16 @@ export default function evaluate(expression) {
     const outputQueue = [];
     const operatorStack = [];
     
-    const precedence = { '+': 1, '-': 1, '*': 2, '/': 2, '%': 2, '^': 3 };
-    const associativity = { '+': 'L', '-': 'L', '*': 'L', '/': 'L', '%': 'L', '^': 'R' };
+    const precedence = { '+': 1, '-': 1, '*': 2, '/': 2, '%': 2, '^': 3, '<': 0, '>': 0, '<=': 0, '>=': 0, '==': 0 };
+    const associativity = { '+': 'L', '-': 'L', '*': 'L', '/': 'L', '%': 'L', '^': 'R', '<': 'L', '>': 'L', '<=': 'L', '>=': 'L', '==': 'L' };
 
     for (let token of tokens) {
-      if (typeof token === 'number') {
+      if (typeof token === 'number' || typeof token === 'string') {
         outputQueue.push(token);
-      } else if (/[+\-*/%^]/.test(token)) {
+      } else if (/[+\-*/%^<>=]/.test(token)) {
         while (
           operatorStack.length &&
-          /[+\-*/%^]/.test(operatorStack[operatorStack.length - 1]) &&
+          /[+\-*/%^<>=]/.test(operatorStack[operatorStack.length - 1]) &&
           (
             (associativity[token] === 'L' && precedence[token] <= precedence[operatorStack[operatorStack.length - 1]]) ||
             (associativity[token] === 'R' && precedence[token] < precedence[operatorStack[operatorStack.length - 1]])
@@ -71,18 +88,25 @@ export default function evaluate(expression) {
     const stack = [];
     
     for (let token of rpn) {
-      if (typeof token === 'number') {
+      if (typeof token === 'number' || typeof token === 'string') {
         stack.push(token);
-      } else if (/[+\-*/%^]/.test(token)) {
+      } else if (/[+\-*/%^<>=]/.test(token)) {
         const b = stack.pop();
         const a = stack.pop();
         switch (token) {
-          case '+': stack.push(a + b); break;
+          case '+': 
+            stack.push(typeof a === 'string' || typeof b === 'string' ? String(a) + String(b) : a + b); 
+            break;
           case '-': stack.push(a - b); break;
           case '*': stack.push(a * b); break;
           case '/': stack.push(a / b); break;
           case '%': stack.push(a % b); break;
           case '^': stack.push(Math.pow(a, b)); break;
+          case '<': stack.push(a < b); break;
+          case '>': stack.push(a > b); break;
+          case '<=': stack.push(a <= b); break;
+          case '>=': stack.push(a >= b); break;
+          case '==': stack.push(a === b); break;
         }
       }
     }
@@ -93,10 +117,10 @@ export default function evaluate(expression) {
         type: 'string'
       };
     }
-    if (isNaN(stack[0])) {
+    if (typeof stack[0] === 'boolean') {
       return {
-        value: 0,
-        type: 'number'
+        value: stack[0],
+        type: 'boolean'
       };
     }
     return {
