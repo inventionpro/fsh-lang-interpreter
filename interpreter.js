@@ -217,6 +217,7 @@ function interpret(code, world, vars = {}) {
         }
         break;
       case 'return':
+        if (world === 'if') return;
         if (world !== 'function') {
           log('error> cannot use return outside functions');
           output('Error: Cannot use return outside functions');
