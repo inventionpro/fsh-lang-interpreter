@@ -225,7 +225,7 @@ function interpret(code, world, vars = {}) {
         return { value: con.value, type: con.type };
         break;
       case 'if':
-        con = args[1].slice(1,-1).join(' ');
+        con = args.slice(1,-1).join(' ');
         if (con[0] === '(' && con[con.length - 1] === ')') {
           con = readType(con.slice(1,-1));
           if (con.type !== 'boolean') {
