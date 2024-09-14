@@ -87,10 +87,22 @@ export default function evaluate(expression) {
       }
     }
 
-    if (isNaN(stack[0])) {
-      return 0;
+    if (typeof stack[0] === 'string') {
+      return {
+        value: stack[0],
+        type: 'string'
+      };
     }
-    return stack[0];
+    if (isNaN(stack[0])) {
+      return {
+        value: 0,
+        type: 'number'
+      };
+    }
+    return {
+      value: stack[0],
+      type: 'number'
+    };
   }
 
   const tokens = tokenize(expression);
