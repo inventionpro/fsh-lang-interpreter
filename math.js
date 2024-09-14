@@ -12,7 +12,7 @@ export default function evaluate(expression) {
       if (/\d/.test(char)) {
         buffer += char;
         i++;
-      } else if (/["]/.test(char)) {
+      } else if ((/[+\-*/%^<>=()]/.test(char)) {
         // Handle strings by detecting quotes
         if (buffer.length > 0) {
           tokens.push(buffer);
@@ -20,30 +20,30 @@ export default function evaluate(expression) {
         }
         i++;
         let stringToken = '';
-        while (exp[i] !== '"') {
+        while (!/[+\-*/%^<>=()]/.test(exp[i])) {
           stringToken += exp[i];
           i++;
         }
         tokens.push(stringToken);
-        i++;  // Skip closing quote
+        i++;
       } else {
         if (buffer.length > 0) {
           tokens.push(Number(buffer));
           buffer = '';
         }
-        
+
         // Handle multi-character operators like <=, >=, ==
         if (exp[i] === '<' || exp[i] === '>' || exp[i] === '=') {
           let nextChar = exp[i + 1];
           if (nextChar === '=') {
-            tokens.push(char + nextChar);  // Handle <=, >=, ==
+            tokens.push(char + nextChar);
             i += 2;
           } else {
-            tokens.push(char);  // Handle <, >
+            tokens.push(char);
             i++;
           }
         } else if (/[+\-*/%^()]/.test(char)) {
-          tokens.push(char);  // Handle single-character operators
+          tokens.push(char);
           i++;
         } else {
           i++;
@@ -121,7 +121,7 @@ export default function evaluate(expression) {
           case '>': stack.push(a > b); break;
           case '<=': stack.push(a <= b); break;
           case '>=': stack.push(a >= b); break;
-          case '==': stack.push(a == b); break;
+          case '==': stack.push(a === b); break;
         }
       }
     }
