@@ -217,8 +217,7 @@ function interpret(code, world, vars = {}) {
         }
         break;
       case 'return':
-        if (world === 'if') return;
-        if (world !== 'function') {
+        if (!['function', 'if'].includes(world)) {
           log('error> cannot use return outside functions');
           output('Error: Cannot use return outside functions');
           continue;
@@ -249,20 +248,15 @@ function interpret(code, world, vars = {}) {
               con += '\n'+preprocess[i];
               i++;
             }
-            interpret(con, 'if', structuredClone(vars));
-            if (con.includes('return')) {
-              if (world !== 'function') {
+            depth = con.includes('return');
+            con = interpret(con, 'if', structuredClone(vars));
+            if (depth) {
+              if (!['function', 'if'].includes(world)) {
                 log('error> cannot use return outside functions');
                 output('Error: Cannot use return outside functions');
                 continue;
               }
-              con = readType((con.match(/^return .*$/m)??['null'])[0].replace('return ',''));
-              if (con.type === 'UNKNOWN') {
-                log('error> unknown type suplied, recived '+con.value);
-                output('Error: Unknown type suplied, recived '+con.value);
-                return { value: con.value, type: con.type };
-              }
-              return { value: con.value, type: con.type };
+              return con;
             }
           } else {
             while ((preprocess[i] !== '}' || depth!==0) && i < preprocess.length) {
