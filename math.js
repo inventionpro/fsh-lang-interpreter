@@ -1,37 +1,52 @@
-export default function evaluate(expression) { 
+export default function evaluate(expression) {
   // Step 1: Tokenize the expression
   function tokenize(exp) {
     const tokens = [];
     let buffer = '';
+    let i = 0;
     
-    for (let char of exp) {
+    while (i < exp.length) {
+      let char = exp[i];
+
       // If the character is part of a number, build a number or part of a string
       if (/\d/.test(char)) {
         buffer += char;
-      } else if (/["'`]/.test(char)) {
+        i++;
+      } else if (/["]/.test(char)) {
         // Handle strings by detecting quotes
         if (buffer.length > 0) {
           tokens.push(buffer);
           buffer = '';
         }
+        i++;
         let stringToken = '';
-        let closingQuote = false;
-        while (!closingQuote) {
-          char = exp[++i];
-          if (/["'`]/.test(char)) {
-            closingQuote = true;
-          } else {
-            stringToken += char;
-          }
+        while (exp[i] !== '"') {
+          stringToken += exp[i];
+          i++;
         }
         tokens.push(stringToken);
+        i++;  // Skip closing quote
       } else {
         if (buffer.length > 0) {
           tokens.push(Number(buffer));
           buffer = '';
         }
-        if (/[+\-*/%^<>=()]/.test(char)) {
-          tokens.push(char);
+        
+        // Handle multi-character operators like <=, >=, ==
+        if (exp[i] === '<' || exp[i] === '>' || exp[i] === '=') {
+          let nextChar = exp[i + 1];
+          if (nextChar === '=') {
+            tokens.push(char + nextChar);  // Handle <=, >=, ==
+            i += 2;
+          } else {
+            tokens.push(char);  // Handle <, >
+            i++;
+          }
+        } else if (/[+\-*/%^()]/.test(char)) {
+          tokens.push(char);  // Handle single-character operators
+          i++;
+        } else {
+          i++;
         }
       }
     }
@@ -106,7 +121,7 @@ export default function evaluate(expression) {
           case '>': stack.push(a > b); break;
           case '<=': stack.push(a <= b); break;
           case '>=': stack.push(a >= b); break;
-          case '==': stack.push(a === b); break;
+          case '==': stack.push(a == b); break;
         }
       }
     }
