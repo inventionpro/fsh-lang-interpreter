@@ -7,39 +7,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fsh.plus/media/style.css">
     <style>
+      body {
+        width: 100vw;
+        width: 100dvw;
+        height: 100vh;
+        height: 100dvh;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+      }
       body > div {
         display: flex;
         align-items: center;
       }
       textarea {
         resize: none;
+        width: 75vw;
+        width: 75dvw;
+        height: 100vh;
+        height: 100dvh;
+        margin: 0px;
+        border-radius: 0;
+        box-sizing: border-box;
       }
       div div {
-        width: 20vw;
-        height: 50vh;
-        margin: 5px;
+        width: 25vw;
+        width: 25dvw;
+        height: 45vh;
+        height: 45dvh;
+        margin: 0px;
         padding: 5px;
         color: var(--text-1);
         border-radius: 0.75rem;
         border: 2px var(--text-1) solid;
         overflow-y: auto;
+        box-sizing: border-box;
       }
     </style>
   </head>
   <body>
+    <textarea id="code"></textarea>
     <div>
-      <textarea id="code" cols="50" rows="15"></textarea>
-      <button id="run">run</button>
-    </div>
-    <div>
-      <span>
-        <p>Output</p>
-        <div id="output"></div>
-      </span>
-      <details>
-        <summary>Logs</summary>
-        <div id="logs"></div>
-      </details>
+      <button id="run">Run code</button>
+      <p>Output</p>
+      <div id="output"></div>
+      <p>Logs</p>
+      <div id="logs"></div>
     </div>
     <script src="interpreter.js" type="module"></script>
   </body>
