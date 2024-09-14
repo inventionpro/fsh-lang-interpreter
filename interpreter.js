@@ -71,6 +71,12 @@ function interpret(code, world, vars = {}) {
         type: 'null'
       };
     }
+    if (val==='null') {
+      return {
+        value: null,
+        type: 'null'
+      };
+    }
     if ((val.match(/^'[^']*'$/m)??[false])[0] || (val.match(/^"[^"]*"$/m)??[false])[0] || (val.match(/^`[^`]*`$/m)??[false])[0]) {
       return {
         value: val.slice(1,-1),
@@ -243,6 +249,20 @@ function interpret(code, world, vars = {}) {
               i++;
             }
             interpret(con, 'if', structuredClone(vars));
+            if (con.includes('return')) {
+              if (world !== 'function') {
+                log('error> cannot use return outside functions');
+                output('Error: Cannot use return outside functions');
+                continue;
+              }
+              con = readType((con.match(/^return .*$/m)??['null'])[0]);
+              if (con.type === 'UNKNOWN') {
+                log('error> unknown type suplied, recived '+con.value);
+                output('Error: Unknown type suplied, recived '+con.value);
+                return { value: con.value, type: con.type };
+              }
+              return { value: con.value, type: con.type };
+            }
           } else {
             while ((preprocess[i] !== '}' || depth!==0) && i < preprocess.length) {
               if (preprocess[i].includes('{')) depth++;
