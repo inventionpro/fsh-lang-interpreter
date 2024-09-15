@@ -67,9 +67,7 @@ export default function evaluate(expression) {
     const associativity = { '+': 'L', '-': 'L', '*': 'L', '/': 'L', '%': 'L', '^': 'R', '<': 'L', '>': 'L', '<=': 'L', '>=': 'L', '==': 'L' };
 
     for (let token of tokens) {
-      if (typeof token === 'number' || typeof token === 'string') {
-        outputQueue.push(token);
-      } else if (/[+\-*/%^<>=]/.test(token)) {
+      if (/[+\-*/%^<>=]/.test(token)) {
         while (
           operatorStack.length &&
           /[+\-*/%^<>=]/.test(operatorStack[operatorStack.length - 1]) &&
@@ -88,6 +86,8 @@ export default function evaluate(expression) {
           outputQueue.push(operatorStack.pop());
         }
         operatorStack.pop(); // Pop the '('
+      } else if (typeof token === 'number' || typeof token === 'string') {
+        outputQueue.push(token);
       }
     }
 
