@@ -16,7 +16,16 @@
         align-items: center;
         overflow: hidden;
       }
-      textarea {
+      .editor {
+        position: relative;
+        width: 75vw;
+        width: 75dvw;
+        height: 100vh;
+        height: 100dvh;
+        box-sizing: border-box;
+      }
+      textarea, .hl {
+        position: absolute;
         resize: none;
         width: 75vw;
         width: 75dvw;
@@ -25,6 +34,23 @@
         margin: 0px;
         border-radius: 0;
         box-sizing: border-box;
+        font-size: 100%;
+        font-family: monospace;
+      }
+      textarea {
+        color: transparent;
+        z-index: 1;
+        font-weight: normal;
+        caret-color: var(--text-1);
+      }
+      .hl {
+        top: 2px;
+        bottom: 2px;
+        left: 2px;
+        right: 2px;
+        padding: 5px;
+        pointer-events: none;
+        z-index: 0;
       }
       div div {
         width: 25vw;
@@ -39,10 +65,30 @@
         overflow-y: auto;
         box-sizing: border-box;
       }
+      .hl-keyword {
+        color: #66c;
+      }
+      .hl-op {
+        color: #c66;
+      }
     </style>
   </head>
   <body>
-    <textarea id="code"></textarea>
+    <div class="editor">
+      <textarea id="code"></textarea>
+      <pre class="hl" aria-hidden="true"></pre>
+      <script>
+        document.getElementById('code').addEventListener('keyup', function(event){
+          let iner = event.target.value;
+          // Keywords
+          iner.replaceAll(/(let|const|if|function)/g, function(match){return '<label class="hl-keyword">'+match+'</label>'})
+          // Operations
+          iner.replaceAll(/[+\-/*%^]/g, function(match){return '<label class="hl-op">'+match+'</label>'})
+          iner.replaceAll(/(<=|>=|<|>|==)/g, function(match){return '<label class="hl-op">'+match+'</label>'})
+          document.querySelector('.hl').innerHTML = iner;
+        })
+      </script>
+    </div>
     <div>
       <button id="run">Run code</button>
       <p>Output</p>
