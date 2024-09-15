@@ -12,7 +12,7 @@ export default function evaluate(expression) {
       if (/\d/.test(char)) {
         buffer += char;
         i++;
-      } else if (/[+\-*/%^<>=()]/.test(char)) {
+      } else if (/["'`]/.test(char)) {
         // Handle strings by detecting quotes
         if (buffer.length > 0) {
           tokens.push(buffer);
@@ -20,7 +20,7 @@ export default function evaluate(expression) {
         }
         i++;
         let stringToken = '';
-        while (!/[+\-*/%^<>=()]/.test(exp[i])) {
+        while (!/["'`]/.test(exp[i])) {
           stringToken += exp[i];
           i++;
         }
