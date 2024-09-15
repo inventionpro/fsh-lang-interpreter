@@ -103,9 +103,7 @@ export default function evaluate(expression) {
     const stack = [];
     
     for (let token of rpn) {
-      if (typeof token === 'number' || typeof token === 'string') {
-        stack.push(token);
-      } else if (/[+\-*/%^<>=]/.test(token)) {
+      if (/[+\-*/%^<>=]/.test(token)) {
         const b = stack.pop();
         const a = stack.pop();
         switch (token) {
@@ -123,6 +121,8 @@ export default function evaluate(expression) {
           case '>=': stack.push(a >= b); break;
           case '==': stack.push(a === b); break;
         }
+      } else if (typeof token === 'number' || typeof token === 'string') {
+        stack.push(token);
       }
     }
 
