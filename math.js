@@ -12,7 +12,7 @@ export default function evaluate(expression) {
       if (/\d/.test(char)) {
         buffer += char;
         i++;
-      } else if ((/[+\-*/%^<>=()]/.test(char)) {
+      } else if (/[+\-*/%^<>=()]/.test(char)) {
         // Handle strings by detecting quotes
         if (buffer.length > 0) {
           tokens.push(buffer);
