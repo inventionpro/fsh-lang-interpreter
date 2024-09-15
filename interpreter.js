@@ -53,36 +53,42 @@ function interpret(code, world, vars = {}) {
 
   // Useful functions
   function readType(val) {
+    // Booleans
     if (['true','false'].includes(val)) {
       return {
         value: (val==='true'? true: false),
         type: 'boolean'
       };
     }
+    // Numbers
     if (!isNaN(val)) {
       return {
         value: Number(val),
         type: 'number'
       };
     }
-    if (!val) {
+    // No value passed
+    if (String(val).length<1) {
       return {
         value: null,
         type: 'null'
       };
     }
+    // Null
     if (val==='null') {
       return {
         value: null,
         type: 'null'
       };
     }
-    if ((val.match(/^'[^']*'$/m)??[false])[0] || (val.match(/^"[^"]*"$/m)??[false])[0] || (val.match(/^`[^`]*`$/m)??[false])[0]) {
+    // Strings
+    if (/^'[^']*'$/m.test(val) || /^"[^"]*"$/m.test(val) || /^`[^`]*`$/m.test(val)) {
       return {
         value: val.slice(1,-1),
         type: 'string'
       };
     }
+    // Function calls
     if (isFunction(val)) {
       let functionName = val.split('(')[0];
       if (['function', 'internal_function'].includes(vars[functionName]?.type)) {
@@ -112,6 +118,7 @@ function interpret(code, world, vars = {}) {
         return { value: val, type: 'UNKNOWN' };
       }
     }
+    // Variables
     if (vars[val]?.type) {
       if (vars[val].type === 'internal_function') {
         return {
@@ -124,6 +131,7 @@ function interpret(code, world, vars = {}) {
         type: vars[val].type
       }
     }
+    // Arithmetic and boolean operations
     if (/[+\-*/%^<>=]/.test(val)) {
       let nval = val;
       nval = nval.replaceAll(/[a-zA-Z_][a-zA-Z0-9_]*/g, function(match){return vars[match]?.value ?? match})
@@ -133,6 +141,7 @@ function interpret(code, world, vars = {}) {
         type: result.type
       }
     }
+    // No known type
     return {
       value: val,
       type: 'UNKNOWN'
