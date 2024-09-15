@@ -80,11 +80,17 @@
       <script>
         document.getElementById('code').addEventListener('keyup', function(event){
           let iner = event.target.value;
-          // Keywords
-          iner.replaceAll(/(let|const|if|function)/g, function(match){return '<label class="hl-keyword">'+match+'</label>'})
+          // Clean
+          iner = iner
+            .replaceAll('&', "&amp;")
+            .replaceAll('<', "&lt;")
+            .replaceAll('>', "&gt;");
           // Operations
-          iner.replaceAll(/[+\-/*%^]/g, function(match){return '<label class="hl-op">'+match+'</label>'})
-          iner.replaceAll(/(<=|>=|<|>|==)/g, function(match){return '<label class="hl-op">'+match+'</label>'})
+          iner = iner
+            .replaceAll(/(<=|>=|<|>|==)/g, function(match){return '<label class="hl-op">'+match+'</label>'})
+            .replaceAll(/[+\-/*%^]/g, function(match){return '<label class="hl-op">'+match+'</label>'})
+          // Keywords
+          iner = iner.replaceAll(/(let|const|if|function|return)/g, function(match){return '<label class="hl-keyword">'+match+'</label>'})
           document.querySelector('.hl').innerHTML = iner;
         })
       </script>
