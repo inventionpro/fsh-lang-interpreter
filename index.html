@@ -83,8 +83,7 @@
           // Colors
           iner = iner
             .replaceAll('&', '&amp;')
-            .replaceAll(/[+\-/*%^]/g, function(match){return '<label class="hl-op">'+match+'</label>'})
-            .replaceAll(/[<>]/g, function(match){return `<label class="hl-op">${match==='<'?'&lt;':'&gt;'}</label>`})
+            .replaceAll(/[+\-/*%^<>]/g, function(match){return `<label class="hl-op">${match==='<'?'&lt;':(match==='>'?'&gt;':match)}</label>`})
             .replaceAll(/(&lt;=|&gt;=|==)/g, function(match){return '<label class="hl-op">'+match+'</label>'});
           // Keywords
           iner = iner.replaceAll(/(let|const|if|function|return)/g, function(match){return '<label class="hl-keyword">'+match+'</label>'})
