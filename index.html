@@ -101,7 +101,7 @@
           // Tags
           iner = iner
             .replaceAll(/¬1.*?1¬/g, function(match){return `<label class="hl-${match.split('1')[1]}">`})
-            .replaceAll('¬2¬', '</label>'});
+            .replaceAll('¬2¬', '</label>');
           document.querySelector('.hl').innerHTML = iner;
         })
       </script>
