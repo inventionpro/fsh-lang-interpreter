@@ -71,6 +71,12 @@
       .hl-op {
         color: #c66;
       }
+      .hl-str {
+        color: #6c6;
+      }
+      .hl-num {
+        color: #6cc;
+      }
     </style>
   </head>
   <body>
@@ -83,10 +89,15 @@
           // Colors
           iner = iner
             .replaceAll('&', '&amp;')
-            .replaceAll(/[+\-/*%^<>]/g, function(match){return `<label class="hl-op">${match==='<'?'&lt;':(match==='>'?'&gt;':match)}</label>`})
-            .replaceAll(/(&lt;=|&gt;=|==)/g, function(match){return '<label class="hl-op">'+match+'</label>'});
+            .replaceAll(/[+\-/*%^<>=]/g, function(match){return `<label class="hl-op">${match==='<'?'&lt;':(match==='>'?'&gt;':match)}</label>`})
           // Keywords
           iner = iner.replaceAll(/(let|const|if|function|return)/g, function(match){return '<label class="hl-keyword">'+match+'</label>'})
+          // Literals
+          iner = iner
+            .replaceAll(/'[^']*?'/g, function(match){return '<label class="hl-str">'+match+'</label>'})
+            .replaceAll(/"[^"]*?"/g, function(match){return '<label class="hl-str">'+match+'</label>'})
+            .replaceAll(/`[^`]*?`/g, function(match){return '<label class="hl-str">'+match+'</label>'})
+            .replaceAll(/(?:^|[^'"`\d])(\d+)(?!['"`])/g, function(match){return '<label class="hl-num">'+match+'</label>'});
           document.querySelector('.hl').innerHTML = iner;
         })
       </script>
