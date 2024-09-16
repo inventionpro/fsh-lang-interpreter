@@ -100,7 +100,7 @@
             .replaceAll(/(?:^|[^'"`\d])(\d+)(?!['"`])/g, function(match){return match.replace(/\d*/, '¬@num@¬$&¬#¬')});
           // Tags
           iner = iner
-            .replaceAll(/¬@.*?@¬/g, function(match){return `<label class="hl-${match.split('1')[1]}">`})
+            .replaceAll(/¬@.*?@¬/g, function(match){return `<label class="hl-${match.split('@')[1]}">`})
             .replaceAll('¬#¬', '</label>');
           document.querySelector('.hl').innerHTML = iner;
         })
