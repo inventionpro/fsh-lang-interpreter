@@ -80,15 +80,12 @@
       <script>
         document.getElementById('code').addEventListener('keyup', function(event){
           let iner = event.target.value;
-          // Clean
+          // Colors
           iner = iner
             .replaceAll('&', '&amp;')
-            .replaceAll('<', '<label class="hl-op">&lt;</label>')
-            .replaceAll('>', '<label class="hl-op">&gt;</label>');
-          // Operations
-          iner = iner
-            .replaceAll(/(&lt;=|&gt;=|==)/g, function(match){return '<label class="hl-op">'+match+'</label>'})
             .replaceAll(/[+\-/*%^]/g, function(match){return '<label class="hl-op">'+match+'</label>'})
+            .replaceAll(/[<>]/g, function(match){return `<label class="hl-op">${match==='<'?'&lt;':'&gt;'}</label>`})
+            .replaceAll(/(&lt;=|&gt;=|==)/g, function(match){return '<label class="hl-op">'+match+'</label>'});
           // Keywords
           iner = iner.replaceAll(/(let|const|if|function|return)/g, function(match){return '<label class="hl-keyword">'+match+'</label>'})
           document.querySelector('.hl').innerHTML = iner;
