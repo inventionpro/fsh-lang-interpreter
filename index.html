@@ -89,19 +89,19 @@
           // Operators
           iner = iner
             .replaceAll('&', '&amp;')
-            .replaceAll(/[+\-/*%^<>=]/g, function(match){return `¬1op1¬${match==='<'?'&lt;':(match==='>'?'&gt;':match)}¬2¬`})
+            .replaceAll(/[+\-/*%^<>=]/g, function(match){return `¬@op@¬${match==='<'?'&lt;':(match==='>'?'&gt;':match)}¬#¬`})
           // Keywords
-          iner = iner.replaceAll(/(let|const|if|function|return)/g, function(match){return '¬1keyword1¬'+match+'¬2¬'});
+          iner = iner.replaceAll(/(let|const|if|function|return)/g, function(match){return '¬@keyword@¬'+match+'¬#¬'});
           // Literals
           iner = iner
-            .replaceAll(/'[^']*?'/g, function(match){return `¬1str1¬${match}¬2¬`})
-            .replaceAll(/"[^"]*?"/g, function(match){return `¬1str1¬${match}¬2¬`})
-            .replaceAll(/`[^`]*?`/g, function(match){return `¬1str1¬${match}¬2¬`})
-            .replaceAll(/(?:^|[^'"`\d])(\d+)(?!['"`])/g, function(match){return match.replace(/\d*/, '¬1num1¬$&¬2¬')});
+            .replaceAll(/'[^']*?'/g, function(match){return `¬@str@¬${match}¬#¬`})
+            .replaceAll(/"[^"]*?"/g, function(match){return `¬@str@¬${match}¬#¬`})
+            .replaceAll(/`[^`]*?`/g, function(match){return `¬@str@¬${match}¬#¬`})
+            .replaceAll(/(?:^|[^'"`\d])(\d+)(?!['"`])/g, function(match){return match.replace(/\d*/, '¬@num@¬$&¬#¬')});
           // Tags
           iner = iner
-            .replaceAll(/¬1.*?1¬/g, function(match){return `<label class="hl-${match.split('1')[1]}">`})
-            .replaceAll('¬2¬', '</label>');
+            .replaceAll(/¬@.*?@¬/g, function(match){return `<label class="hl-${match.split('1')[1]}">`})
+            .replaceAll('¬#¬', '</label>');
           document.querySelector('.hl').innerHTML = iner;
         })
       </script>
