@@ -97,7 +97,7 @@
             .replaceAll(/'[^']*?'/g, function(match){return '<label class="hl-str">'+match+'</label>'})
             .replaceAll(/"[^"]*?"/g, function(match){return '<label class="hl-str">'+match+'</label>'})
             .replaceAll(/`[^`]*?`/g, function(match){return '<label class="hl-str">'+match+'</label>'})
-            .replaceAll(/(?:^|[^'"`\d])(\d+)(?!['"`])/g, function(match){return '<label class="hl-num">'+match+'</label>'});
+            .replaceAll(/(?:^|[^'"`\d])(\d+)(?!['"`])/g, '<label class="hl-num">$1</label>');
           document.querySelector('.hl').innerHTML = iner;
         })
       </script>
