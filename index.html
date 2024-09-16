@@ -82,12 +82,12 @@
           let iner = event.target.value;
           // Clean
           iner = iner
-            .replaceAll('&', "&amp;")
-            .replaceAll('<', "&lt;")
-            .replaceAll('>', "&gt;");
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '<label class="hl-op">&lt;</label>')
+            .replaceAll('>', '<label class="hl-op">&gt;</label>');
           // Operations
           iner = iner
-            .replaceAll(/(<=|>=|<|>|==)/g, function(match){return '<label class="hl-op">'+match+'</label>'})
+            .replaceAll(/(&lt;=|&gt;=|==)/g, function(match){return '<label class="hl-op">'+match+'</label>'})
             .replaceAll(/[+\-/*%^]/g, function(match){return '<label class="hl-op">'+match+'</label>'})
           // Keywords
           iner = iner.replaceAll(/(let|const|if|function|return)/g, function(match){return '<label class="hl-keyword">'+match+'</label>'})
