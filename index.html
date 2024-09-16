@@ -86,18 +86,18 @@
       <script>
         document.getElementById('code').addEventListener('keyup', function(event){
           let iner = event.target.value;
-          // Colors
-          iner = iner
-            .replaceAll('&', '&amp;')
-            .replaceAll(/[+\-/*%^<>=]/g, function(match){return `<label class="hl-op">${match==='<'?'&lt;':(match==='>'?'&gt;':match)}</label>`})
-          // Keywords
-          iner = iner.replaceAll(/(let|const|if|function|return)/g, function(match){return '<label class="hl-keyword">'+match+'</label>'})
           // Literals
           iner = iner
             .replaceAll(/'[^']*?'/g, function(match){return '<label class="hl-str">'+match+'</label>'})
             .replaceAll(/"[^"]*?"/g, function(match){return '<label class="hl-str">'+match+'</label>'})
             .replaceAll(/`[^`]*?`/g, function(match){return '<label class="hl-str">'+match+'</label>'})
-            .replaceAll(/(?:^|[^'"`\d])(\d+)(?!['"`])/g, '<label class="hl-num">$1</label>');
+          // Operators
+          iner = iner
+            .replaceAll('&', '&amp;')
+            .replaceAll(/[+\-/*%^<>=]/g, function(match){return `<label class="hl-op">${match==='<'?'&lt;':(match==='>'?'&gt;':match)}</label>`})
+          // Keywords
+          iner = iner.replaceAll(/(let|const|if|function|return)/g, function(match){return '<label class="hl-keyword">'+match+'</label>'})
+            .replaceAll(/(?:^|[^'"`\d])(\d+)(?!['"`])/g, function(match){return match.replace(/\d*/, '<label class="hl-num">$&</label>')});
           document.querySelector('.hl').innerHTML = iner;
         })
       </script>
